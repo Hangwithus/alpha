@@ -58,7 +58,7 @@ FriendsController: UITableViewController {
                     print("availableUsers --")
                     print(self.availableUsers)
                     print("unavailableUsers --")
-
+                    print(UIFont.familyNames)
                     print(self.unavailableUsers)
                 }
             }
