@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class
-FriendsController: UITableViewController {
+FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
     let cellid = "cellid"
     let sections = ["Available", "Unavailable"]
@@ -18,6 +18,14 @@ FriendsController: UITableViewController {
     var availableUsers = [Users]()
     var unavailableUsers = [Users]()
 
+    let status = ["not","💩", "🌲", "❤️"]
+    let statusText = ["available","shit", "tree", "heart"]
+    let pickerView = UIPickerView()
+    var rotationAngle: CGFloat!
+    let width:CGFloat = 300
+    let height:CGFloat = 100
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
                 
@@ -26,10 +34,25 @@ FriendsController: UITableViewController {
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellid)
         
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        
+        //Status picker rotation
+        rotationAngle = -90 * (.pi/180)
+        pickerView.transform = CGAffineTransform(rotationAngle: rotationAngle)
+        
+        pickerView.frame = CGRect(x: 0 - 150 , y: 0, width: view.frame.width + 300, height: 100)
+        pickerView.center = self.view.center
+        self.view.addSubview(pickerView)
+        pickerView.backgroundColor = UIColor.white
+        pickerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        
         fetchUser()
     }
     
     func fetchUser() {
+        DispatchQueue.main.async { self.tableView.reloadData() }
+
         let rootRef = Database.database().reference()
         let query = rootRef.child("users").queryOrdered(byChild: "name")
         query.observe(.value) { (snapshot) in
@@ -40,9 +63,11 @@ FriendsController: UITableViewController {
                     let availability = value["available"] as? String ?? "Name not found"
                     let name = value["name"] as? String ?? "Name not found"
                     let email = value["email"] as? String ?? "Email not found"
+                    let status = value["status"] as? String ?? "Status not found"
                     user.name = name
                     user.email = email
                     user.availability = availability
+                    user.status = status
                     self.users.append(user)
                     DispatchQueue.main.async { self.tableView.reloadData() }
                    // print(user.name, user.availability)
@@ -77,7 +102,6 @@ FriendsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         if section == 0 {
             return availableUsers.count
 
@@ -86,15 +110,20 @@ FriendsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         //hack for now
         let cell = tableView.dequeueReusableCell(withIdentifier: cellid, for: indexPath)
         let user = indexPath.section == 0 ? availableUsers[indexPath.row] : unavailableUsers[indexPath.row]
         cell.textLabel?.text = user.name
+        if(user.availability == "true"){
+        cell.detailTextLabel?.text = user.status
+        }else{
+            cell.detailTextLabel?.text = "unavailable"
+        }
         return cell
     }
     
     class UserCell: UITableViewCell {
+        
         override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
             super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         }
@@ -127,6 +156,78 @@ FriendsController: UITableViewController {
         
     }
 
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return status.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 200
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return 100
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    {
+        // use the row to get the selected row from the picker view
+        // using the row extract the value from your datasource (array[row])
+        guard let currentGuy = Auth.auth().currentUser?.uid else{
+            return
+        }
+        let ref = Database.database().reference(fromURL: "https://hang-8b734.firebaseio.com/")
+        let usersReference = ref.child("users").child(currentGuy)
+        var values = ["available":"", "status":""]
+        if(row == 0){
+            values = ["available":"false", "status":"unavailable"]
+        }else{
+            values = ["available":"true", "status":status[row]]
+        }
+        availableUsers = [Users]()
+        unavailableUsers = [Users]()
+        usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+            
+            if err != nil {
+                print(err!)
+                return
+            }
+            
+            self.dismiss(animated: true, completion: nil)
+            
+            print("updated that thing")
+            
+        })
+        
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        let view = UIView()
+        view.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        
+        let label = UILabel()
+        label.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 20)
+        label.text = status[row]
+        let label2 = UILabel()
+        label2.frame = CGRect(x:0, y:20, width:width, height:height)
+        label2.textAlignment = .center
+        label2.font = UIFont.systemFont(ofSize:14)
+        label2.text = statusText[row]
+        view.addSubview(label2)
+        view.addSubview(label)
+        
+        //View rotation
+        view.transform = CGAffineTransform(rotationAngle: 90 * (.pi/180))
+        
+        return view
+    }
+    
+    
     @objc func handleLogout() {
         
         do {

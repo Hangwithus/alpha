@@ -49,6 +49,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
+        
+        guard let currentGuy = Auth.auth().currentUser?.uid else{
+            return
+        }
+        let ref = Database.database().reference(fromURL: "https://hang-8b734.firebaseio.com/")
+        let usersReference = ref.child("users").child(currentGuy)
+        let values = ["available":"false", "status":"unavailable"]
+
+        usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+            
+            if err != nil {
+                print(err!)
+                return
+            }
+            
+            print("updated that thing")
+            
+        })
         self.saveContext()
     }
 
