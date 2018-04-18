@@ -37,7 +37,7 @@ FriendsController: UITableViewController {
                 if let value = child.value as? NSDictionary {
                     let user = Users()
                     //let key = child.key
-                    let availability = value["available"] as? String ?? "Name not found"
+                    let availability = value["available"] as? String ?? "Availability not found"
                     let name = value["name"] as? String ?? "Name not found"
                     let email = value["email"] as? String ?? "Email not found"
                     user.name = name
