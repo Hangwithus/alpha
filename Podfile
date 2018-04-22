@@ -9,6 +9,8 @@ target 'hang' do
   pod 'Firebase/Database'
   pod 'Firebase/Auth'
   pod 'Firebase/Storage'
+  pod 'Mapbox-iOS-SDK'
+  pod 'SnapKit'
 
   target 'hangTests' do
     inherit! :search_paths

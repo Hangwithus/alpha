@@ -24,7 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         
         window?.rootViewController = UINavigationController(rootViewController: FriendsController())
-        
+        window?.tintColor = UIColor(red:0.10, green:0.87, blue:0.19, alpha:1.00)
+
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Nunito-SemiBold", size: 17)!], for: UIControlState.normal)
+
         return true
     }
 

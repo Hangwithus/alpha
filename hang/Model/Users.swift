@@ -15,3 +15,7 @@ class Users: NSObject {
     var availability: String?
     var status: String?
 }
+
+var status = ["not","💻", "🍱", "🍻"]
+var statusText = ["available","working", "food", "beer"]
+var statusAdded = false

@@ -8,18 +8,25 @@
 
 import UIKit
 import Firebase
+import SnapKit
 
 class
-FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+FriendsController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate {
+    
+    //fonts
+    let semiBoldLabel = UIFont(name: "Nunito-SemiBold", size: UIFont.labelFontSize)
+    let semiBoldLabelSmall = UIFont(name: "Nunito-SemiBold", size: UIFont.smallSystemFontSize)
+    let boldLabel = UIFont(name: "Nunito-Bold", size: UIFont.labelFontSize)
+
     
     let cellid = "cellid"
     let sections = ["Available", "Unavailable"]
     var users = [Users]()
     var availableUsers = [Users]()
     var unavailableUsers = [Users]()
-
-    let status = ["not","💩", "🌲", "❤️"]
-    let statusText = ["available","shit", "tree", "heart"]
+    var cellSelected = 0
+    let tableView = UITableView()
+    var pickerRowVariable = 0
     let pickerView = UIPickerView()
     var rotationAngle: CGFloat!
     let width:CGFloat = 300
@@ -28,10 +35,22 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        let logo = UIImage(named: "navlogo")
+        let logoImageView = UIImageView(image:logo)
+        self.navigationItem.titleView = logoImageView
+        self.navigationItem.title = "Friends"
+        self.view.addSubview(tableView)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.snp.makeConstraints { (make) in
+            make.top.bottom.left.right.equalTo(self.view)
+        }
         //adds logout item to left of navigation controller
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title:"logout", style: .plain, target: self, action: #selector(handleLogout))
-        
+        let settingsButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(named:"settings"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(handleSettings))
+        navigationItem.leftBarButtonItem = settingsButton
+        let addButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(named:"add"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(handleAdd))
+        navigationItem.rightBarButtonItem = addButton
+
         tableView.register(UserCell.self, forCellReuseIdentifier: cellid)
         
         pickerView.delegate = self
@@ -41,13 +60,26 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         rotationAngle = -90 * (.pi/180)
         pickerView.transform = CGAffineTransform(rotationAngle: rotationAngle)
         
-        pickerView.frame = CGRect(x: 0 - 150 , y: 0, width: view.frame.width + 300, height: 100)
-        pickerView.center = self.view.center
+        //pickerView.center = self.view.center
         self.view.addSubview(pickerView)
         pickerView.backgroundColor = UIColor.white
-        pickerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+       //pickerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
         
+//        pickerView.snp.makeConstraints { (make) in
+//            make.bottom.left.right.equalTo(self.view)
+//            make.width.equalTo(self.view)
+//        }
+//
         fetchUser()
+    }
+    
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        pickerView.frame = CGRect(x: 0 - 150 , y: view.frame.height-120, width: view.frame.width + 300, height: 120)
+        tableView.contentInset = UIEdgeInsetsMake(0, 0, 120, 0)
+        tableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 120, 0)
+
     }
     
     func fetchUser() {
@@ -56,6 +88,8 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         let rootRef = Database.database().reference()
         let query = rootRef.child("users").queryOrdered(byChild: "name")
         query.observe(.value) { (snapshot) in
+            self.availableUsers.removeAll()
+            self.unavailableUsers.removeAll()
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 if let value = child.value as? NSDictionary {
                     let user = Users()
@@ -69,8 +103,6 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
                     user.availability = availability
                     user.status = status
                     self.users.append(user)
-                    DispatchQueue.main.async { self.tableView.reloadData() }
-                   // print(user.name, user.availability)
                     if(user.availability == "true"){
                         //self.availableUsers.append(key)
                         self.availableUsers.append(user)
@@ -83,6 +115,7 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
                     print("availableUsers --")
                     print(self.availableUsers)
                     print("unavailableUsers --")
+                    DispatchQueue.main.async { self.tableView.reloadData() }
 
                     print(self.unavailableUsers)
                 }
@@ -90,18 +123,31 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         }
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = UIColor(red:0.94, green:0.94, blue:0.96, alpha:1.00)
         let label = UILabel()
         label.text = self.sections[section]
-        label.backgroundColor = UIColor.lightGray
-        return label
+        if #available(iOS 11.0, *) {
+            label.font = UIFontMetrics.default.scaledFont(for: boldLabel!)
+        } else {
+            // Fallback on earlier versions
+        }
+        label.adjustsFontForContentSizeCategory = true
+        label.frame = CGRect(x: 12, y: 5, width: 100, height: 35)
+        view.addSubview(label)
+        return view
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 45
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return availableUsers.count
 
@@ -109,16 +155,41 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         return unavailableUsers.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //hack for now
         let cell = tableView.dequeueReusableCell(withIdentifier: cellid, for: indexPath)
         let user = indexPath.section == 0 ? availableUsers[indexPath.row] : unavailableUsers[indexPath.row]
+       
+      
+        if #available(iOS 11.0, *) {
+            cell.textLabel?.font = UIFontMetrics.default.scaledFont(for: semiBoldLabel!)
+        } else {
+            // Fallback on earlier versions
+        }
+        cell.textLabel?.adjustsFontForContentSizeCategory = true
+
         cell.textLabel?.text = user.name
         if(user.availability == "true"){
         cell.detailTextLabel?.text = user.status
         }else{
             cell.detailTextLabel?.text = "unavailable"
+            if #available(iOS 11.0, *) {
+                cell.detailTextLabel?.font = UIFontMetrics.default.scaledFont(for: semiBoldLabelSmall!)
+            } else {
+                // Fallback on earlier versions
+            }
+            cell.detailTextLabel?.adjustsFontForContentSizeCategory = true
         }
+        
+        if indexPath.section == 0 && pickerRowVariable != 0 {
+            cell.selectionStyle = .gray
+            cell.accessoryType = .disclosureIndicator
+        } else {
+            cell.selectionStyle = .none
+            cell.accessoryType = .none
+
+        }
+        
         return cell
     }
     
@@ -133,9 +204,25 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if indexPath.section != 0 || pickerRowVariable == 0 {
+            return
+        }
+        
+        let mapController = MapController()
+        mapController.user = availableUsers[indexPath.row]
+        self.navigationController?.pushViewController(mapController, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         
         checkIfUserIsLogeedIn()
+        if statusAdded == true {
+            pickerView.reloadAllComponents()
+            print("reloaded components")
+        }
     }
     
     func checkIfUserIsLogeedIn() {
@@ -145,11 +232,11 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
             let uid = Auth.auth().currentUser?.uid
             Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
                 
-                if let dictionary = snapshot.value as? [String: AnyObject]  {
-                    
-                    self.navigationItem.title = dictionary["name"] as? String
-
-                }
+//                if let dictionary = snapshot.value as? [String: AnyObject]  {
+//
+//                    //self.navigationItem.title = dictionary["name"] as? String
+//
+//                }
                 
             }, withCancel: nil)
         }
@@ -174,6 +261,7 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
+        pickerRowVariable = row
         // use the row to get the selected row from the picker view
         // using the row extract the value from your datasource (array[row])
         guard let currentGuy = Auth.auth().currentUser?.uid else{
@@ -187,8 +275,7 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         }else{
             values = ["available":"true", "status":status[row]]
         }
-        availableUsers = [Users]()
-        unavailableUsers = [Users]()
+       
         usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
             
             if err != nil {
@@ -199,6 +286,8 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
             self.dismiss(animated: true, completion: nil)
             
             print("updated that thing")
+//            self.availableUsers = [Users]()
+//            self.unavailableUsers = [Users]()
             
         })
         
@@ -211,12 +300,20 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         let label = UILabel()
         label.frame = CGRect(x: 0, y: 0, width: width, height: height)
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 20)
+        if #available(iOS 11.0, *) {
+            label.font = UIFontMetrics.default.scaledFont(for: boldLabel!)
+        } else {
+            // Fallback on earlier versions
+        }
         label.text = status[row]
         let label2 = UILabel()
         label2.frame = CGRect(x:0, y:20, width:width, height:height)
         label2.textAlignment = .center
-        label2.font = UIFont.systemFont(ofSize:14)
+        if #available(iOS 11.0, *) {
+            label2.font = UIFontMetrics.default.scaledFont(for: semiBoldLabel!)
+        } else {
+            // Fallback on earlier versions
+        }
         label2.text = statusText[row]
         view.addSubview(label2)
         view.addSubview(label)
@@ -227,26 +324,62 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         return view
     }
     
+      @objc func handleMap() {
+        let addController = MapController()
+        self.navigationController?.pushViewController(addController, animated: true)
+    }
+    
+   @objc func handleSettings() {
+        
+        let alert = UIAlertController(title: "Settings", message: nil, preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "Sign Out", style: .destructive , handler:{ (UIAlertAction)in
+            print("User click Sign Out button")
+            do {
+                try Auth.auth().signOut()
+            } catch let logoutError {
+                print(logoutError)
+            }
+            let loginController = LoginController()
+            self.present(loginController, animated: true, completion: nil)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler:{ (UIAlertAction)in
+            print("User click Dismiss button")
+        }))
+        
+        self.present(alert, animated: true, completion: {
+            print("completion block")
+        })
+        
+
+    }
     
     @objc func handleLogout() {
-        
         do {
             try Auth.auth().signOut()
         } catch let logoutError {
             print(logoutError)
         }
-        
-        //presents login view
         let loginController = LoginController()
-        present(loginController, animated: true, completion: nil)
-        
-        perform(#selector(removeNavigationText), with: nil, afterDelay: 1)
+        self.present(loginController, animated: true, completion: nil)
 
     }
     
-    @objc func removeNavigationText() {
-        self.navigationItem.title = " "
+    @objc func handleAdd() {
+  
+        
+        //presents login view
+        let addController = CreateStatusController()
+        let navigationController = UINavigationController(rootViewController: addController)
+        present(navigationController, animated: true, completion: nil)
+        
+        // perform(#selector(removeNavigationText), with: nil, afterDelay: 1)
+        
     }
+//    @objc func removeNavigationText() {
+//        self.navigationItem.title = " "
+//    }
 
 
 }
