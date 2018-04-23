@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		456D289DEFEC3F4972A4A7C1 /* Pods_hangTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED64D7FD5A0BCFAA0AB71BF4 /* Pods_hangTests.framework */; };
+		5CE33688208828F800D1EF6B /* AddFriendController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CE33687208828F800D1EF6B /* AddFriendController.swift */; };
 		BCAA7CC7072AEB6E87D278DB /* Pods_hang.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FF05CD26EA2E15206858C94 /* Pods_hang.framework */; };
 		CD575A4C614D0D0CCAB317DF /* Pods_hangUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B839B4C2553F92B8C9A6C613 /* Pods_hangUITests.framework */; };
 		E4479A30208430B40099FB5B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4479A2F208430B40099FB5B /* AppDelegate.swift */; };
@@ -45,6 +46,7 @@
 		058D7DF946944AC25FC69AD3 /* Pods-hang.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hang.release.xcconfig"; path = "Pods/Target Support Files/Pods-hang/Pods-hang.release.xcconfig"; sourceTree = "<group>"; };
 		25F8A8DADE55910F6CF34986 /* Pods-hangUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hangUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-hangUITests/Pods-hangUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		2BFAE0DE62F26F7086C1BE8F /* Pods-hang.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hang.debug.xcconfig"; path = "Pods/Target Support Files/Pods-hang/Pods-hang.debug.xcconfig"; sourceTree = "<group>"; };
+		5CE33687208828F800D1EF6B /* AddFriendController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendController.swift; sourceTree = "<group>"; };
 		939D9039F8CB6123FA25B382 /* Pods-hangUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hangUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-hangUITests/Pods-hangUITests.release.xcconfig"; sourceTree = "<group>"; };
 		9FF05CD26EA2E15206858C94 /* Pods_hang.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hang.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B839B4C2553F92B8C9A6C613 /* Pods_hangUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hangUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +183,7 @@
 			children = (
 				E4479A61208437DF0099FB5B /* LoginController.swift */,
 				E4479A31208430B40099FB5B /* FriendsController.swift */,
+				5CE33687208828F800D1EF6B /* AddFriendController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4479A32208430B40099FB5B /* FriendsController.swift in Sources */,
+				5CE33688208828F800D1EF6B /* AddFriendController.swift in Sources */,
 				E4479A62208437DF0099FB5B /* LoginController.swift in Sources */,
 				E4479A38208430B40099FB5B /* hang.xcdatamodeld in Sources */,
 				E4479A672086E8410099FB5B /* Users.swift in Sources */,

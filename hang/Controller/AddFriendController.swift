@@ -1,16 +1,16 @@
 //
-//  LoginController.swift
+//  AddFriendController.swift
 //  hang
 //
-//  Created by Joe Kennedy on 4/15/18.
+//  Created by Nolan Canady on 4/18/18.
 //  Copyright © 2018 Joe Kennedy. All rights reserved.
 //
 
 import UIKit
 import Firebase
 
-class LoginController: UIViewController, UITextFieldDelegate {
-    
+class AddFriendController: UIViewController,UITextFieldDelegate {
+
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "logolarge")
@@ -32,7 +32,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     
     let nameTextField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Name"
+        tf.placeholder = "Friend Code"
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
         
@@ -72,7 +72,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     let loginRegisterButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor(red:0.10, green:0.87, blue:0.19, alpha:1.00)
-        button.setTitle("Sign Up", for: .normal)
+        button.setTitle("Add Friend", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.white, for: .normal)
         button.layer.cornerRadius = 26
@@ -85,7 +85,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     }()
     
     let loginRegisterSegmentedControl: UISegmentedControl = {
-        let sc = UISegmentedControl(items: ["Login", "Sign Up"])
+        let sc = UISegmentedControl(items: ["Add Status", "Add Friend"])
         sc.translatesAutoresizingMaskIntoConstraints = false
         sc.tintColor = UIColor(red:0.10, green:0.87, blue:0.19, alpha:1.00)
         sc.selectedSegmentIndex = 1
@@ -112,61 +112,182 @@ class LoginController: UIViewController, UITextFieldDelegate {
         
     }
     
+    //right here changes what happens when the button is clicked based off of the segemented index
     @objc func handleLoginRegister() {
         
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
-            handleLogin()
+            handleLogin() //add status
         } else {
-            handleRegister()
+            handleRegister() //add friend
         }
         
     }
     
+    //var didTheRegister = 0
+    
     @objc func handleRegister() {
-        
-        guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else {
+        //if(didTheRegister == 0){
+        print("called myself")
+        guard let friendCode = nameTextField.text else {
             print("form is not valid")
             return
         }
         
-        Auth.auth().createUser(withEmail: email, password: password, completion: { (user: User?, error) in
-            
-            if error != nil {
-                print(error!)
-                return
-            }
-            
-            guard let uid = user?.uid else {
-                return
-            }
-            
-            //successfully authenticated
-            let ref = Database.database().reference(fromURL: "https://hang-8b734.firebaseio.com/")
-            let usersReference = ref.child("users").child(uid)
-            let friendCode = name+String(arc4random_uniform(9))+String(arc4random_uniform(9))+String(arc4random_uniform(9))+String(arc4random_uniform(9))+String(arc4random_uniform(9))+String(arc4random_uniform(9))
-            let stringUID: String = String(uid)
-            let friendsListData = [
-                "0": stringUID
-            ]
-            //let friendsList = [friendsListData]
-            
-            usersReference.setValue(["friendsList":friendsListData])
-            
-            let values = ["name": name, "email": email, "available":"false", "status":"status", "friendCode":friendCode, "numFriends":"0"]
-            usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
-                
-                if err != nil {
-                    print(err!)
-                    return
+        //need to add way to make sure that friend isn't already added
+        
+        let rootRef = Database.database().reference()
+        let query = rootRef.child("users").queryOrdered(byChild: "friendCode")
+        
+        query.observe(.value) { (snapshot) in
+            for child in snapshot.children.allObjects as! [DataSnapshot] {
+                if let value = child.value as? NSDictionary {
+                    var loopcount = 0
+                    let user = Users()
+                    let key = child.key
+                    var friendNumFriends = Int(value["numFriends"] as? String ?? "0")!
+                    let userfriendCode = value["friendCode"] as? String ?? "N/A"
+                    let name = value["name"] as? String ?? "N/A"
+                   // print(userfriendCode)
+                    //print(friendCode)
+                    //print("HEY LOOK AT ME OH MY GOD I AM ONLY CALLED ONCE")
+                    if(userfriendCode == friendCode){
+                        print("found the guy")
+                        guard let currentGuy = Auth.auth().currentUser?.uid else{
+                            return
+                        }
+                        var myNumFriends = 0
+                        let currentQuery = rootRef.child("users").child(currentGuy)
+                        currentQuery.observe(.value){(snapshot) in
+                            //for child in snapshot.children.allObjects as! [DataSnapshot]{
+                                let value2 = snapshot.value as? NSDictionary
+                                print(value2)
+                                    print("got that value")
+                                    myNumFriends = value2?["numFriends"] as? Int ?? 0
+                                    print("my friends after grabbed")
+                                    print(myNumFriends)
+                                
+                            //}
+                        }
+                        
+                        let ref = Database.database().reference(fromURL: "https://hang-8b734.firebaseio.com/")
+                        let usersReference = ref.child("users").child(currentGuy).child("friendsList")
+                        let newFriendsReference = ref.child("users").child(key).child("friendsList")
+                        friendNumFriends = friendNumFriends + 1
+                        myNumFriends = myNumFriends + 1
+                        print("friends Num")
+                        print(friendNumFriends)
+                        print("myNumFriends")
+                        print(myNumFriends)
+                        var sMyFriendsNum = "\(myNumFriends)"
+                        var sFriendsFriendsNum = "\(friendNumFriends)"
+                        let friendValues = [sFriendsFriendsNum:currentGuy]
+                        let userValues = [sMyFriendsNum:key]
+                        //if(row == 0){
+                        //    values = ["available":"false", "status":"unavailable"]
+                        //}else{
+                        //    values = ["available":"true", "status":status[row]]
+                        //}
+                        //availableUsers = [Users]()
+                        //unavailableUsers = [Users]()
+                        //ref.child("users").child(key).child("friendsList").setValue([currentGuy: ""])
+                        //ref.child("users").child(currentGuy).child("friendsList").setValue([key:""])
+                        print("past this")
+                        let userReference2 = ref.child("users").child(currentGuy)
+                        let friendReference2 = ref.child("users").child(key)
+                        let unumvals = ["numFriends":sMyFriendsNum]
+                        print(unumvals)
+                        let fnumvals = ["numFriends":sFriendsFriendsNum]
+                        usersReference.updateChildValues(userValues, withCompletionBlock: { (err, ref) in
+                            
+                            if err != nil {
+                                print(err!)
+                                return
+                            }
+                            
+                            //self.dismiss(animated: true, completion: nil)
+                            
+                            print("updated that thing1")
+                            
+                        })
+                        userReference2.updateChildValues(unumvals, withCompletionBlock: { (err, ref) in
+                            
+                            if err != nil {
+                                print(err!)
+                                return
+                            }
+                            
+                            //self.dismiss(animated: true, completion: nil)
+                            
+                            print("updated that thing2")
+                            
+                        })
+                        friendReference2.updateChildValues(fnumvals, withCompletionBlock: { (err, ref) in
+                            
+                            if err != nil {
+                                print(err!)
+                                return
+                            }
+                            
+                            //self.dismiss(animated: true, completion: nil)
+                            
+                            print("updated that thing3")
+                            
+                        })
+                        newFriendsReference.updateChildValues(friendValues, withCompletionBlock: { (err, ref) in
+                            
+                            if err != nil {
+                                print(err!)
+                                return
+                            }
+                            
+                            //self.dismiss(animated: true, completion: nil)
+                            
+                            print("updated that thing4")
+                            
+                        })
+                       
+                        //let addFriendController = AddFriendController()
+                        
+                        //self.navigationController?.pushViewController(addFriendController, animated:true)
+                        let friendsController = FriendsController()
+                        loopcount = loopcount + 1
+                        print(loopcount)
+                        self.navigationController?.pushViewController(friendsController, animated:true)
+                        continue
+                    }else{
+                        print("its not me!")
+                    }
+                    //let key = child.key
+                    //let availability = value["available"] as? String ?? "Name not found"
+                    //let name = value["name"] as? String ?? "Name not found"
+                    //let email = value["email"] as? String ?? "Email not found"
+                    //let status = value["status"] as? String ?? "Status not found"
+                    //user.name = name
+                    //user.email = email
+                    //user.availability = availability
+                    //user.status = status
+                    //self.users.append(user)
+                    // print(user.name, user.availability)
+                    
+                    //if(user.availability == "true"){
+                        //self.availableUsers.append(key)
+                        //self.availableUsers.append(user)
+                        //print("got that");
+                    //}else{
+                        //self.unavailableUsers.append(key)
+                        //self.unavailableUsers.append(user)
+                        
+                    //}
+                    // print("availableUsers --")
+                    // print(self.availableUsers)
+                    // print("unavailableUsers --")
+                    
+                    // print(self.unavailableUsers)
                 }
-                
-                self.dismiss(animated: true, completion: nil)
-                
-                print("saved user successfully into firebase db")
-                
-            })
-
-        })
+            }
+        }
+       // }
+        //didTheRegister = 1
     }
     
     @objc func handleLoginRegisterChange() {
@@ -183,12 +304,12 @@ class LoginController: UIViewController, UITextFieldDelegate {
         
         //change height of email field
         emailTextFieldHeightAnchor?.isActive = false
-        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/3)
+        emailTextFieldHeightAnchor = emailTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 0)
         emailTextFieldHeightAnchor?.isActive = true
         
         //change height of password field
         passwordTextFieldHeightAnchor?.isActive = false
-        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/3)
+        passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 0)
         passwordTextFieldHeightAnchor?.isActive = true
         
         nameSeparatorViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 0 : 1
@@ -215,7 +336,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         view.addSubview(inputsContainerView)
         view.addSubview(loginRegisterButton)
         view.addSubview(loginRegisterSegmentedControl)
-
+        
         setupInputsContainerView()
         setupLoginRegisterButton()
         setupLogoImageView()
@@ -248,13 +369,13 @@ class LoginController: UIViewController, UITextFieldDelegate {
         inputsContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         inputsContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
         inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 150);inputsContainerViewHeightAnchor?.isActive = true
-
+        
         inputsContainerView.addSubview(nameTextField)
         inputsContainerView.addSubview(nameSeparatorView)
         inputsContainerView.addSubview(emailTextField)
         inputsContainerView.addSubview(emailSeparatorView)
         inputsContainerView.addSubview(passwordTextField)
-
+        
         nameTextField.leftAnchor.constraint(equalTo: inputsContainerView.leftAnchor, constant: 12).isActive = true
         nameTextField.topAnchor.constraint(equalTo: inputsContainerView.topAnchor).isActive = true
         nameTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
@@ -291,20 +412,20 @@ class LoginController: UIViewController, UITextFieldDelegate {
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 52).isActive = true
     }
     
-//    @objc func keyboardWillShow(sender: NSNotification) {
-//        self.view.frame.origin.y -= 100
-//    }
-//    @objc func keyboardWillHide(sender: NSNotification) {
-//        self.view.frame.origin.y += 100
-//    }
+    //    @objc func keyboardWillShow(sender: NSNotification) {
+    //        self.view.frame.origin.y -= 100
+    //    }
+    //    @objc func keyboardWillHide(sender: NSNotification) {
+    //        self.view.frame.origin.y += 100
+    //    }
     
-   @objc func keyboardWillHide() {
+    @objc func keyboardWillHide() {
         self.view.frame.origin.y = 0
     }
     
-   @objc  func keyboardWillChange(notification: NSNotification) {
+    @objc  func keyboardWillChange(notification: NSNotification) {
         
-    if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) != nil {
+        if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) != nil {
             if nameTextField.isFirstResponder || emailTextField.isFirstResponder || passwordTextField.isFirstResponder{
                 self.view.frame.origin.y = -86
             }

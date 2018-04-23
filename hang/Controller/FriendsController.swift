@@ -11,7 +11,7 @@ import Firebase
 
 class
 FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDelegate {
-    
+
     let cellid = "cellid"
     let sections = ["Available", "Unavailable"]
     var users = [Users]()
@@ -31,7 +31,7 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
                 
         //adds logout item to left of navigation controller
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"logout", style: .plain, target: self, action: #selector(handleLogout))
-        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title:"+", style: .plain, target: self, action: #selector(handleAdd))
         tableView.register(UserCell.self, forCellReuseIdentifier: cellid)
         
         pickerView.delegate = self
@@ -52,13 +52,85 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
     
     func fetchUser() {
         DispatchQueue.main.async { self.tableView.reloadData() }
-
+        
+        guard let currentGuy = Auth.auth().currentUser?.uid else{
+            return
+        }
+        
+        print("fetched")
         let rootRef = Database.database().reference()
-        let query = rootRef.child("users").queryOrdered(byChild: "name")
+        let query = rootRef.child("users").child(currentGuy)
+        
         query.observe(.value) { (snapshot) in
-            for child in snapshot.children.allObjects as! [DataSnapshot] {
-                if let value = child.value as? NSDictionary {
-                    let user = Users()
+            //for child in snapshot.children.allObjects as! [DataSnapshot] {
+               // print("got here 0")
+                //if let value = child.value as? NSDictionary {
+                    //let value = (child.value as? NSDictionary
+                    let value = snapshot.value as? NSDictionary
+                    //print(child)
+                    //print(value)
+                   // print("got here 1")
+                    let numFriends = value?["numFriends"] as? Int ?? 0
+                    let friendCode = value?["friendCode"] as? String ?? ""
+                    //print(numFriends)
+                   // print(friendCode)
+                    let friendsList = value?["friendsList"] as? [String] ?? [String]();
+                   // print(friendsList[0])
+                    let friendQuery = rootRef.child("users")
+            friendQuery.observe(.value){(snapshot) in
+                for child in snapshot.children.allObjects as! [DataSnapshot]{
+                    //print("in here")
+                    if let value2 = child.value as? NSDictionary{
+                        //print(value2)
+                        //print(value2["available"])
+                        let key = child.key
+                        var x: Int = 0
+                        while x<=numFriends{
+                            if(key == friendsList[x]){
+                            
+                                let user = Users()
+                                //let key = child.key
+                                let availability = value2["available"] as? String ?? "availability not found"
+                                let name = value2["name"] as? String ?? "Name not found"
+                                let email = value2["email"] as? String ?? "Email not found"
+                                let status = value2["status"] as? String ?? "Status not found"
+                                user.name = name
+                                user.email = email
+                                user.availability = availability
+                                user.status = status
+                                self.users.append(user)
+                                DispatchQueue.main.async { self.tableView.reloadData() }
+                                // print(user.name, user.availability)
+                            
+                                if(user.availability == "true"){
+                                    //self.availableUsers.append(key)
+                                    self.availableUsers.append(user)
+                                    //print("got that");
+                                }else{
+                                    //self.unavailableUsers.append(key)
+                                    self.unavailableUsers.append(user)
+                                }
+                            }
+                            x = x+1
+                        }
+                    }
+                }
+            }
+                        var x: Int = 0
+                        while x <= numFriends{
+                         //   print("got here 3")
+                            
+                            //print(value2)
+                            let friendUID = friendsList[x]
+                            //print(friendUID)
+                            
+                            x = x+1
+                        //}
+                        }
+                        
+                 //   }
+               // }
+                   /* let user = Users()
                     //let key = child.key
                     let availability = value["available"] as? String ?? "Name not found"
                     let name = value["name"] as? String ?? "Name not found"
@@ -71,22 +143,23 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
                     self.users.append(user)
                     DispatchQueue.main.async { self.tableView.reloadData() }
                    // print(user.name, user.availability)
+                    
                     if(user.availability == "true"){
                         //self.availableUsers.append(key)
                         self.availableUsers.append(user)
-                        print("got that");
+                        //print("got that");
                     }else{
                         //self.unavailableUsers.append(key)
                         self.unavailableUsers.append(user)
 
-                    }
-                    print("availableUsers --")
-                    print(self.availableUsers)
-                    print("unavailableUsers --")
+                    }*/
+                   // print("availableUsers --")
+                   // print(self.availableUsers)
+                   // print("unavailableUsers --")
 
-                    print(self.unavailableUsers)
-                }
-            }
+                   // print(self.unavailableUsers)
+                //}
+            
         }
     }
     
@@ -110,12 +183,14 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         //hack for now
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: cellid, for: indexPath)
         let user = indexPath.section == 0 ? availableUsers[indexPath.row] : unavailableUsers[indexPath.row]
         cell.textLabel?.text = user.name
         if(user.availability == "true"){
-        cell.detailTextLabel?.text = user.status
+            cell.detailTextLabel?.text = user.status
         }else{
             cell.detailTextLabel?.text = "unavailable"
         }
@@ -213,6 +288,7 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 20)
         label.text = status[row]
+        
         let label2 = UILabel()
         label2.frame = CGRect(x:0, y:20, width:width, height:height)
         label2.textAlignment = .center
@@ -227,6 +303,12 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         return view
     }
     
+    @objc func handleAdd(){
+        
+        let addFriendController = AddFriendController()
+
+        self.navigationController?.pushViewController(addFriendController, animated:true)
+    }
     
     @objc func handleLogout() {
         
