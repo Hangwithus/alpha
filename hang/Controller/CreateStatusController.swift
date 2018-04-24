@@ -51,7 +51,6 @@ class CreateStatusController: UIViewController,UIAlertViewDelegate, UITextFieldD
         super.viewDidLoad()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Cancel", style: .plain, target: self, action: #selector(handleHome))
-        navigationItem.leftBarButtonItem?.style
         self.navigationItem.title = "Add Status"
         view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [ kCTFontAttributeName: UIFont(name: "Nunito-Bold", size: 17)!] as [NSAttributedStringKey : Any]
@@ -87,13 +86,13 @@ class CreateStatusController: UIViewController,UIAlertViewDelegate, UITextFieldD
     
     @objc func addStatus() {
         
-        var emojiInput = emojiField.text
-        var statusInput = statusField.text
+        let emojiInput = emojiField.text
+        let statusInput = statusField.text
         status.append(emojiInput!)
         statusText.append(statusInput!)
         statusAdded = true
-        print(emojiInput)
-        print(statusInput)
+//        print(emojiInput)
+//        print(statusInput)
         print([status])
         
         

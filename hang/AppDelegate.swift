@@ -20,13 +20,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //adds firebase
         FirebaseApp.configure()
         //loads ViewController.swift as main view
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
+//        window = UIWindow(frame: UIScreen.main.bounds)
+//        window?.makeKeyAndVisible()
+//
+//        window?.rootViewController = UINavigationController(rootViewController: FriendsController())
+//        window?.tintColor = UIColor(red:0.10, green:0.87, blue:0.19, alpha:1.00)
+//
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let exampleViewController: FriendsUIViewController = mainStoryboard.instantiateViewController(withIdentifier: "FriendsUI") as! FriendsUIViewController
         
-        window?.rootViewController = UINavigationController(rootViewController: FriendsController())
-        window?.tintColor = UIColor(red:0.10, green:0.87, blue:0.19, alpha:1.00)
-
-        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Nunito-SemiBold", size: 17)!], for: UIControlState.normal)
+        self.window?.rootViewController = exampleViewController
+        
+        self.window?.makeKeyAndVisible()
+                UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Nunito-SemiBold", size: 17)!], for: UIControlState.normal)
 
         return true
     }

@@ -351,7 +351,7 @@ FriendsController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
         self.present(alert, animated: true, completion: {
             print("completion block")
         })
-        
+    
 
     }
     
