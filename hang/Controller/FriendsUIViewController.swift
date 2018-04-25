@@ -13,17 +13,23 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
     
     @IBOutlet weak var tableView: UITableView!
     var friends : Array<Dictionary<String,String>> = placeholderFriends
-    
+    var friendsUnavailable : Array<Dictionary<String,String>> = placeholderFriendsUavailable
+
+    let sections = ["AVAILABLE", "UNAVAILABLE"]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.reloadData()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
+     
+        
         //tableview
         tableView.backgroundColor = UIColor.clear
 //        tableView.layer.cornerRadius = 10
 //        tableView.layer.masksToBounds = true
+        
 
         // Do any additional setup after loading the view.
     }
@@ -34,24 +40,54 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return friends.count
+        if section == 0 {
+            return friends.count
+            
+        }
+        return friendsUnavailable.count
+        
     }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 58
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "headerCell") as! HeaderTableViewCell
+        cell.title.text = self.sections[section]
+ 
+        return cell
+    }
+    
+   
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let userAvailable = friends[indexPath.row]
+        let userUnavailable = friendsUnavailable[indexPath.row]
 
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell") as! FriendsTableViewCell
-        let friend = friends[indexPath.row]
-        
-        cell.name.text = friend["name"]
-        cell.info.text = friend["distance"]
-        cell.emoji.text = friend["emoji"]
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell") as! FriendsTableViewCell
+            cell.name.text = userAvailable["name"]
+            cell.info.text = userAvailable["distance"]
+            cell.emoji.text = userAvailable["emoji"]
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "friendUnavailableCell") as! FriendsUnavailableTableViewCell
+            cell.name.text = userUnavailable["name"]
+            cell.info.text = userUnavailable["lastAvailable"]
+            return cell
+        }
+    }
+     
             
 //        cell.layer.cornerRadius=10 //set corner radius here
 //        cell.layer.borderWidth = 2 // set border width here
 
-        return cell
-    }
+
+    
+    
+    
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
     {
@@ -91,7 +127,7 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
 
 
    
- 
+  
 
     /*
     // MARK: - Navigation

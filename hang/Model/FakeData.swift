@@ -13,7 +13,6 @@ let placeholderFriends = [
         "name": "Joe Kennedy",
         "status": "beer",
         "emoji": "🍻",
-        "available": "true",
         "distance": "0.5 mi",
         "time": "2 hrs"
     
@@ -22,7 +21,27 @@ let placeholderFriends = [
         "name": "Drew Sibert",
         "status": "coffee",
         "emoji": "💤",
-        "available": "true",
+        "distance": "0.5 mi",
+        "time": "2 hrs"
+    ]
+    
+]
+
+let placeholderFriendsUavailable = [
+    [
+        "name": "Nolan Canady",
+        "status": "beer",
+        "emoji": "",
+        "lastAvailable": "Available 30mins ago",
+        "distance": "0.5 mi",
+        "time": "2 hrs"
+        
+    ],
+    [
+        "name": "Ben Ji",
+        "status": "coffee",
+        "emoji": "",
+        "lastAvailable": "Available 2hrs ago",
         "distance": "0.5 mi",
         "time": "2 hrs"
     ]

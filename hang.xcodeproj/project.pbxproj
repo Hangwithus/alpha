@@ -30,6 +30,8 @@
 		E4479A672086E8410099FB5B /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4479A662086E8410099FB5B /* Users.swift */; };
 		E47F3263208ECF4D004B3E48 /* FakeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47F3262208ECF4D004B3E48 /* FakeData.swift */; };
 		E484A038209025D200ECB78D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E484A037209025D200ECB78D /* MapViewController.swift */; };
+		E4F034C92090F47A003D7976 /* HeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F034C82090F47A003D7976 /* HeaderTableViewCell.swift */; };
+		E4F034CB20911255003D7976 /* FriendsUnavailableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F034CA20911255003D7976 /* FriendsUnavailableTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +86,8 @@
 		E4479A662086E8410099FB5B /* Users.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
 		E47F3262208ECF4D004B3E48 /* FakeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeData.swift; sourceTree = "<group>"; };
 		E484A037209025D200ECB78D /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		E4F034C82090F47A003D7976 /* HeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTableViewCell.swift; sourceTree = "<group>"; };
+		E4F034CA20911255003D7976 /* FriendsUnavailableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsUnavailableTableViewCell.swift; sourceTree = "<group>"; };
 		ED64D7FD5A0BCFAA0AB71BF4 /* Pods_hangTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hangTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -215,6 +219,8 @@
 				E41F3138208FB4F900E4098A /* FriendsUIViewController.swift */,
 				E41F313A208FB9E900E4098A /* FriendsTableViewCell.swift */,
 				E484A037209025D200ECB78D /* MapViewController.swift */,
+				E4F034CA20911255003D7976 /* FriendsUnavailableTableViewCell.swift */,
+				E4F034C82090F47A003D7976 /* HeaderTableViewCell.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -456,8 +462,10 @@
 			files = (
 				E484A038209025D200ECB78D /* MapViewController.swift in Sources */,
 				E47F3263208ECF4D004B3E48 /* FakeData.swift in Sources */,
+				E4F034CB20911255003D7976 /* FriendsUnavailableTableViewCell.swift in Sources */,
 				E41F3139208FB4F900E4098A /* FriendsUIViewController.swift in Sources */,
 				E4479A32208430B40099FB5B /* FriendsController.swift in Sources */,
+				E4F034C92090F47A003D7976 /* HeaderTableViewCell.swift in Sources */,
 				E41F313B208FB9E900E4098A /* FriendsTableViewCell.swift in Sources */,
 				E4479A62208437DF0099FB5B /* LoginController.swift in Sources */,
 				E4479A38208430B40099FB5B /* hang.xcdatamodeld in Sources */,
@@ -642,7 +650,10 @@
 				DEVELOPMENT_TEAM = 74RK69P838;
 				INFOPLIST_FILE = hang/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joekndy.hang;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -659,7 +670,10 @@
 				DEVELOPMENT_TEAM = 74RK69P838;
 				INFOPLIST_FILE = hang/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joekndy.hang;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -676,7 +690,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JCM53R4K6M;
 				INFOPLIST_FILE = hangTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joekndy.hangTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -694,7 +712,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JCM53R4K6M;
 				INFOPLIST_FILE = hangTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joekndy.hangTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -711,7 +733,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JCM53R4K6M;
 				INFOPLIST_FILE = hangUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joekndy.hangUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -728,7 +754,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JCM53R4K6M;
 				INFOPLIST_FILE = hangUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joekndy.hangUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
