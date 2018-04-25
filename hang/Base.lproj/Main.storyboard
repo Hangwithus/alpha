@@ -29,7 +29,15 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6uO-ww-wwC" customClass="MGLMapView">
                                 <rect key="frame" x="0.0" y="111" width="375" height="667"/>
+                                <subviews>
+                                    <view alpha="0.69999999999999996" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oqj-ZE-63A">
+                                        <rect key="frame" x="-8" y="-100" width="375" height="812"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" red="0.075974054634571075" green="0.79927331209182739" blue="0.27091172337532043" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="375" id="6Id-7h-5M6"/>
                                     <constraint firstAttribute="height" constant="667" id="jif-kV-JXN"/>
@@ -113,13 +121,22 @@
                                 <rect key="frame" x="0.0" y="600" width="375" height="147"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sPH-PD-HFx" customClass="StatusUIViewController" customModule="hang" customModuleProvider="target">
+                                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" image="statusSelector_2x" highlightedImage="statusSelected_2x" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xM6-Lq-Jrg">
+                                        <rect key="frame" x="125" y="11" width="124" height="124"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                    </imageView>
+                                    <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sPH-PD-HFx">
                                         <rect key="frame" x="0.0" y="-8" width="375" height="162"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </pickerView>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" image="navlogo" translatesAutoresizingMaskIntoConstraints="NO" id="ym4-0l-BBZ">
+                                <rect key="frame" x="164" y="44" width="46" height="37"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -133,15 +150,19 @@
                     <connections>
                         <outlet property="mapView" destination="6uO-ww-wwC" id="eAE-UK-zev"/>
                         <outlet property="statusPicker" destination="sPH-PD-HFx" id="egc-f4-lt3"/>
+                        <outlet property="statusRing" destination="xM6-Lq-Jrg" id="RWy-Zv-brQ"/>
                         <outlet property="tableView" destination="BYT-RO-t0e" id="2LZ-3P-0x2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ImK-o6-Ixq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="511.19999999999999" y="-330.58470764617692"/>
+            <point key="canvasLocation" x="511.19999999999999" y="-331.0344827586207"/>
         </scene>
     </scenes>
     <resources>
         <image name="available" width="14" height="14"/>
+        <image name="navlogo" width="46" height="37"/>
+        <image name="statusSelected_2x" width="124" height="124"/>
+        <image name="statusSelector_2x" width="124" height="124"/>
     </resources>
 </document>

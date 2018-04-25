@@ -8,15 +8,19 @@
 
 import UIKit
 
-class AvailabilityPicker: UIPickerView {
+/*class AvailabilityPicker: UIPickerView {
     let customWidth:CGFloat = 100
     let customHeight:CGFloat = 100
+    
+    var status = ["not","💻", "🍱", "🍻"]
+    var statusText = ["available","working", "food", "beer"]
+    var statusAdded = false
 }
 
 extension AvailabilityPicker: UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         //Limit columns in picker view to 1
-        return 1
+        return 4
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -28,7 +32,7 @@ extension AvailabilityPicker: UIPickerViewDataSource {
 
 extension AvailabilityPicker: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return 100
+        return 400
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
@@ -39,6 +43,11 @@ extension AvailabilityPicker: UIPickerViewDelegate {
         //Define labels
         let statusEmoji = UILabel(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
         
+        //Define styles
+        statusEmoji.textColor = UIColor.black
+        statusEmoji.textAlignment = .center
+        
+        
         //Define labels datasources
         statusEmoji.text = status[row]
         
@@ -47,4 +56,4 @@ extension AvailabilityPicker: UIPickerViewDelegate {
         
         return view
     }
-}
+}*/
