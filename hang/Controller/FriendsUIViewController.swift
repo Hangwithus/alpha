@@ -23,7 +23,10 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
-     
+        //disable sticky headers
+        let dummyViewHeight = CGFloat(58)
+        self.tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.bounds.size.width, height: dummyViewHeight))
+        self.tableView.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0)
         
         //tableview
         tableView.backgroundColor = UIColor.clear
