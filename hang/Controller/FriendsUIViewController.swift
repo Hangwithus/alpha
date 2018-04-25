@@ -72,6 +72,11 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
     //picker code
     
     func numberOfComponents(in statusPicker: UIPickerView) -> Int {
+        
+        statusPicker.subviews.forEach({
+            $0.isHidden = $0.frame.height < 1.0
+        })
+        
         //Limit columns in picker view to 1
         return 1
     }
@@ -83,11 +88,11 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func pickerView(_ statusPicker: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return height
+        return 100
     }
     
     func pickerView(_ statusPicker: UIPickerView, widthForComponent component: Int) -> CGFloat {
-        return width
+        return 100
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -107,33 +112,34 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
     func pickerView(_ statusPicker: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let view = UIView()
             view.frame = CGRect(x: 0, y: 0, width: width, height: height)
-            view.backgroundColor = UIColor.white
         
-        let label = UILabel()
+        let availabilityEmoji = UILabel()
 
-            label.frame = CGRect(x: 0, y: 0, width: width, height: height)
-            label.textAlignment = .center
+            availabilityEmoji.frame = CGRect(x: 0, y: 0, width: width, height: height)
+            availabilityEmoji.textAlignment = .center
             
         if #available(iOS 11.0, *) {
-            label.font = UIFontMetrics.default.scaledFont(for: boldLabel!)
+            availabilityEmoji.font = UIFontMetrics.default.scaledFont(for: boldLabel!)
         } else {
             // Fallback on earlier versions
         }
-            label.text = status[row]
+            availabilityEmoji.text = status[row]
         
-        let label2 = UILabel()
-            label2.textColor = UIColor.white
-            label2.frame = CGRect(x:0, y:20, width:width, height:height)
-            label2.textAlignment = .center
+        let availabilityTitle = UILabel()
+            availabilityTitle.textColor = UIColor.white
+            availabilityTitle.frame = CGRect(x:0, y:20, width:width, height:height)
+            availabilityTitle.textAlignment = .center
+            availabilityTitle.translatesAutoresizingMaskIntoConstraints = false
+            availabilityTitle.heightAnchor.constraint(equalToConstant: 36).isActive = true
         if #available(iOS 11.0, *) {
-            label2.font = UIFontMetrics.default.scaledFont(for: semiBoldLabel!)
+            availabilityTitle.font = UIFontMetrics.default.scaledFont(for: boldLabel!)
         } else {
             // Fallback on earlier versions
         }
-            label2.text = statusText[row]
+            availabilityTitle.text = statusText[row]
         
-        view.addSubview(label2)
-        view.addSubview(label)
+        view.addSubview(availabilityTitle)
+        view.addSubview(availabilityEmoji)
         
         //View rotation
         view.transform = CGAffineTransform(rotationAngle: 90 * (.pi/180))
