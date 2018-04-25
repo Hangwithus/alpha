@@ -10,26 +10,34 @@ import UIKit
 import Mapbox
 
 class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MGLMapViewDelegate {
+    
   
     @IBOutlet weak var mapView: MGLMapView!
     
     @IBOutlet weak var tableView: UITableView!
     var friends : Array<Dictionary<String,String>> = placeholderFriends
     
+    @IBOutlet weak var statusPicker: UIPickerView!
+    var availabilityPicker: AvailabilityPicker!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.reloadData()
         tableView.delegate = self
         tableView.dataSource = self
+        
+        statusPicker.delegate = availabilityPicker
+        statusPicker.dataSource = availabilityPicker
+        
         mapView.showsUserLocation = true
         mapView.delegate = self
 
         // Do any additional setup after loading the view.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func mapView(_ mapView: MGLMapView, didUpdate userLocation: MGLUserLocation?) {
+        let location = mapView.userLocation?.location
+        mapView.setCenter(CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!),zoomLevel: 15, animated: false)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -46,22 +54,5 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
 
         return cell
     }
-    
-    func mapView(_ mapView: MGLMapView, didUpdate userLocation: MGLUserLocation?) {
-        let location = mapView.userLocation?.location
-        mapView.setCenter(CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!),zoomLevel: 15, animated: false)
-        
-    }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
