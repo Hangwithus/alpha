@@ -7,11 +7,9 @@
 //
 
 import UIKit
-import Mapbox
 
-class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MGLMapViewDelegate {
+class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
   
-    @IBOutlet weak var mapView: MGLMapView!
     
     @IBOutlet weak var tableView: UITableView!
     var friends : Array<Dictionary<String,String>> = placeholderFriends
@@ -21,8 +19,11 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.reloadData()
         tableView.delegate = self
         tableView.dataSource = self
-        mapView.showsUserLocation = true
-        mapView.delegate = self
+        tableView.tableFooterView = UIView()
+        //tableview
+        tableView.backgroundColor = UIColor.clear
+//        tableView.layer.cornerRadius = 10
+//        tableView.layer.masksToBounds = true
 
         // Do any additional setup after loading the view.
     }
@@ -37,22 +38,60 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell") as! FriendsTableViewCell
         let friend = friends[indexPath.row]
         
         cell.name.text = friend["name"]
         cell.info.text = friend["distance"]
         cell.emoji.text = friend["emoji"]
+            
+//        cell.layer.cornerRadius=10 //set corner radius here
+//        cell.layer.borderWidth = 2 // set border width here
 
         return cell
     }
     
-    func mapView(_ mapView: MGLMapView, didUpdate userLocation: MGLUserLocation?) {
-        let location = mapView.userLocation?.location
-        mapView.setCenter(CLLocationCoordinate2D(latitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!),zoomLevel: 15, animated: false)
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
+    {
+        
+            //Top Left Right Corners
+            let maskPathTop = UIBezierPath(roundedRect: cell.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 8.0, height: 8.0))
+            let shapeLayerTop = CAShapeLayer()
+            shapeLayerTop.frame = cell.bounds
+            shapeLayerTop.path = maskPathTop.cgPath
+            
+            //Bottom Left Right Corners
+            let maskPathBottom = UIBezierPath(roundedRect: cell.bounds, byRoundingCorners: [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: 8.0, height: 8.0))
+            let shapeLayerBottom = CAShapeLayer()
+            shapeLayerBottom.frame = cell.bounds
+            shapeLayerBottom.path = maskPathBottom.cgPath
+            
+            //All Corners
+            let maskPathAll = UIBezierPath(roundedRect: cell.bounds, byRoundingCorners: [.topLeft, .topRight, .bottomRight, .bottomLeft], cornerRadii: CGSize(width: 8.0, height: 8.0))
+            let shapeLayerAll = CAShapeLayer()
+            shapeLayerAll.frame = cell.bounds
+            shapeLayerAll.path = maskPathAll.cgPath
+            
+            if (indexPath.row == 0 && indexPath.row == tableView.numberOfRows(inSection: indexPath.section)-1)
+            {
+                cell.layer.mask = shapeLayerAll
+            }
+            else if (indexPath.row == 0)
+            {
+                cell.layer.mask = shapeLayerTop
+            }
+            else if (indexPath.row == tableView.numberOfRows(inSection: indexPath.section)-1)
+            {
+                cell.layer.mask = shapeLayerBottom
+            }
         
     }
-    
+
+
+   
+ 
 
     /*
     // MARK: - Navigation
