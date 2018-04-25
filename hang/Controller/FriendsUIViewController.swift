@@ -8,6 +8,36 @@
 
 import UIKit
 
+extension UILabel {
+    
+    @IBInspectable var kerning: Float {
+        get {
+            var range = NSMakeRange(0, (text ?? "").count)
+            guard let kern = attributedText?.attribute(kCTKernAttributeName as NSAttributedStringKey, at: 0, effectiveRange: &range),
+                let value = kern as? NSNumber
+                else {
+                    return 0
+            }
+            return value.floatValue
+        }
+        set {
+            var attText:NSMutableAttributedString
+            
+            if let attributedText = attributedText {
+                attText = NSMutableAttributedString(attributedString: attributedText)
+            } else if let text = text {
+                attText = NSMutableAttributedString(string: text)
+            } else {
+                attText = NSMutableAttributedString(string: "")
+            }
+            
+            let range = NSMakeRange(0, attText.length)
+            attText.addAttribute(kCTKernAttributeName as NSAttributedStringKey, value: NSNumber(value: newValue), range: range)
+            self.attributedText = attText
+        }
+    }
+}
+
 class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
   
     
@@ -60,6 +90,7 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: "headerCell") as! HeaderTableViewCell
         cell.title.text = self.sections[section]
+        cell.title.kerning = 1
  
         return cell
     }

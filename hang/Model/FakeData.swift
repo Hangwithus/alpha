@@ -20,7 +20,7 @@ let placeholderFriends = [
     [
         "name": "Drew Sibert",
         "status": "coffee",
-        "emoji": "💤",
+        "emoji": "🏀",
         "distance": "0.5 mi",
         "time": "2 hrs"
     ]

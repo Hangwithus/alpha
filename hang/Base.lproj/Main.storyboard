@@ -95,40 +95,41 @@
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="eM5-Yy-Zi1" secondAttribute="bottom" constant="8.5" id="Gyx-AO-pUJ"/>
                                                 <constraint firstItem="eM5-Yy-Zi1" firstAttribute="leading" secondItem="PxM-b0-F5P" secondAttribute="leading" id="Lkj-wO-NBj"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="eM5-Yy-Zi1" secondAttribute="trailing" constant="20" symbolic="YES" id="zwS-6Y-WBg"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="title" destination="eM5-Yy-Zi1" id="8G1-zq-h3I"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="0.0" reuseIdentifier="friendCell" rowHeight="55" id="DWK-1P-udl" customClass="FriendsTableViewCell" customModule="hang" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="0.0" reuseIdentifier="friendCell" rowHeight="55" id="DWK-1P-udl" customClass="FriendsTableViewCell" customModule="hang" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="56" width="351" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DWK-1P-udl" id="nNn-6Y-ouR">
                                             <rect key="frame" x="0.0" y="0.0" width="351" height="54.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="☕️" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9yt-Jk-VhO">
-                                                    <rect key="frame" x="16" y="7" width="37" height="40"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="☕️" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9yt-Jk-VhO">
+                                                    <rect key="frame" x="14" y="7" width="37" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="40" id="Cgx-nP-B8J"/>
                                                         <constraint firstAttribute="width" constant="37" id="yrD-fF-m3b"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="33"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Dr1-c4-ypb">
-                                                    <rect key="frame" x="61" y="9" width="45.5" height="40"/>
+                                                    <rect key="frame" x="55" y="6" width="45.5" height="38"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1W0-6O-Qkb">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1W0-6O-Qkb">
                                                             <rect key="frame" x="0.0" y="0.0" width="45.5" height="23.5"/>
                                                             <fontDescription key="fontDescription" name="Nunito-SemiBold" family="Nunito" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OA5-vw-SXA">
-                                                            <rect key="frame" x="0.0" y="23.5" width="45.5" height="16.5"/>
+                                                            <rect key="frame" x="0.0" y="23.5" width="45.5" height="14.5"/>
                                                             <fontDescription key="fontDescription" name="Nunito-Bold" family="Nunito" pointSize="12"/>
                                                             <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -141,11 +142,11 @@
                                                 </imageView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="Dr1-c4-ypb" firstAttribute="top" secondItem="nNn-6Y-ouR" secondAttribute="top" constant="9" id="0GG-uf-plR"/>
-                                                <constraint firstAttribute="bottom" secondItem="Dr1-c4-ypb" secondAttribute="bottom" constant="5.5" id="GuQ-rN-u1B"/>
-                                                <constraint firstItem="Dr1-c4-ypb" firstAttribute="leading" secondItem="9yt-Jk-VhO" secondAttribute="trailing" constant="8" id="TuU-MM-PeX"/>
+                                                <constraint firstItem="Dr1-c4-ypb" firstAttribute="top" secondItem="nNn-6Y-ouR" secondAttribute="top" constant="6" id="0GG-uf-plR"/>
+                                                <constraint firstAttribute="bottom" secondItem="Dr1-c4-ypb" secondAttribute="bottom" constant="10.5" id="GuQ-rN-u1B"/>
+                                                <constraint firstItem="Dr1-c4-ypb" firstAttribute="leading" secondItem="9yt-Jk-VhO" secondAttribute="trailing" constant="4" id="TuU-MM-PeX"/>
                                                 <constraint firstItem="9yt-Jk-VhO" firstAttribute="top" secondItem="nNn-6Y-ouR" secondAttribute="top" constant="7" id="bdN-hl-gfl"/>
-                                                <constraint firstItem="9yt-Jk-VhO" firstAttribute="leading" secondItem="nNn-6Y-ouR" secondAttribute="leading" constant="16" id="hXo-or-bLJ"/>
+                                                <constraint firstItem="9yt-Jk-VhO" firstAttribute="leading" secondItem="nNn-6Y-ouR" secondAttribute="leading" constant="14" id="hXo-or-bLJ"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -156,7 +157,7 @@
                                             <outlet property="name" destination="1W0-6O-Qkb" id="GCg-hh-hqF"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="0.0" reuseIdentifier="friendUnavailableCell" rowHeight="55" id="h0H-GY-xxg" customClass="FriendsUnavailableTableViewCell" customModule="hang" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="0.0" reuseIdentifier="friendUnavailableCell" rowHeight="55" id="h0H-GY-xxg" customClass="FriendsUnavailableTableViewCell" customModule="hang" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="111" width="351" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="h0H-GY-xxg" id="B1N-Fo-vRr">
@@ -164,7 +165,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="QEt-2F-DXh">
-                                                    <rect key="frame" x="12" y="9" width="45.5" height="40"/>
+                                                    <rect key="frame" x="16" y="6" width="45.5" height="38"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cRR-z4-tPI">
                                                             <rect key="frame" x="0.0" y="0.0" width="45.5" height="23.5"/>
@@ -172,8 +173,8 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38X-WV-tYI">
-                                                            <rect key="frame" x="0.0" y="23.5" width="45.5" height="16.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38X-WV-tYI">
+                                                            <rect key="frame" x="0.0" y="23.5" width="45.5" height="14.5"/>
                                                             <fontDescription key="fontDescription" name="Nunito-Bold" family="Nunito" pointSize="12"/>
                                                             <color key="textColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -182,9 +183,9 @@
                                                 </stackView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="QEt-2F-DXh" firstAttribute="top" secondItem="B1N-Fo-vRr" secondAttribute="top" constant="9" id="AQ7-sc-BpF"/>
-                                                <constraint firstItem="QEt-2F-DXh" firstAttribute="leading" secondItem="B1N-Fo-vRr" secondAttribute="leading" constant="12" id="B8O-5H-eZG"/>
-                                                <constraint firstAttribute="bottom" secondItem="QEt-2F-DXh" secondAttribute="bottom" constant="5.5" id="bYu-WP-bQU"/>
+                                                <constraint firstItem="QEt-2F-DXh" firstAttribute="top" secondItem="B1N-Fo-vRr" secondAttribute="top" constant="6" id="AQ7-sc-BpF"/>
+                                                <constraint firstItem="QEt-2F-DXh" firstAttribute="leading" secondItem="B1N-Fo-vRr" secondAttribute="leading" constant="16" id="B8O-5H-eZG"/>
+                                                <constraint firstAttribute="bottom" secondItem="QEt-2F-DXh" secondAttribute="bottom" constant="10.5" id="bYu-WP-bQU"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
