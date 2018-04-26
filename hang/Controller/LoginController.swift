@@ -147,7 +147,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
             //successfully authenticated
             let ref = Database.database().reference(fromURL: "https://hang-8b734.firebaseio.com/")
             let usersReference = ref.child("users").child(uid)
-            let values = ["name": name, "email": email, "available":"false"]
+            let values = ["name": name, "email": email, "available":"false", "status":"status"]
             usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
                 
                 if err != nil {
