@@ -94,7 +94,7 @@ FriendsController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
                 if let value = child.value as? NSDictionary {
                     let user = Users()
                     //let key = child.key
-                    let availability = value["available"] as? String ?? "Name not found"
+                    let availability = value["available"] as? String ?? "Availability not found"
                     let name = value["name"] as? String ?? "Name not found"
                     let email = value["email"] as? String ?? "Email not found"
                     let status = value["status"] as? String ?? "Status not found"
@@ -115,9 +115,10 @@ FriendsController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
                     print("availableUsers --")
                     print(self.availableUsers)
                     print("unavailableUsers --")
-                    DispatchQueue.main.async { self.tableView.reloadData() }
-
+                    print(UIFont.familyNames)
                     print(self.unavailableUsers)
+                  
+                    DispatchQueue.main.async { self.tableView.reloadData()
                 }
             }
         }

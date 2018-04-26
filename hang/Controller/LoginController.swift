@@ -34,6 +34,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         let tf = UITextField()
         tf.placeholder = "Name"
         tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.font = UIFont(name: "Nunito", size: 16)
         return tf
         
     }()
@@ -49,6 +50,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         let tf = UITextField()
         tf.placeholder = "Email"
         tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.font = UIFont(name: "Nunito", size: 16)
         return tf
         
     }()
@@ -65,6 +67,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         tf.placeholder = "Password"
         tf.isSecureTextEntry = true
         tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.font = UIFont(name: "Nunito", size: 16)
         return tf
         
     }()
@@ -77,7 +80,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         button.setTitleColor(UIColor.white, for: .normal)
         button.layer.cornerRadius = 26
         button.layer.masksToBounds = true
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        button.titleLabel?.font = UIFont(name: "Nunito", size: 16)
         
         button.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
         
@@ -90,6 +93,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         sc.tintColor = UIColor(red:0.10, green:0.87, blue:0.19, alpha:1.00)
         sc.selectedSegmentIndex = 1
         sc.addTarget(self, action: #selector(handleLoginRegisterChange), for: .valueChanged)
+        //sc.font = UIFont(name: "Nunito", size: 16)
         return sc
     }()
     
