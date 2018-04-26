@@ -17,7 +17,6 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
     var users = [Users]()
     var availableUsers = [Users]()
     var unavailableUsers = [Users]()
-
     let status = ["not","💩", "🌲", "❤️"]
     let statusText = ["available","shit", "tree", "heart"]
     let pickerView = UIPickerView()
@@ -25,6 +24,7 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
     let width:CGFloat = 300
     let height:CGFloat = 100
     
+    let fbData = FirebaseData()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +60,8 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         print("fetched")
         let rootRef = Database.database().reference()
         let query = rootRef.child("users").child(currentGuy)
+        
+        
         
         query.observe(.value) { (snapshot) in
             //for child in snapshot.children.allObjects as! [DataSnapshot] {
@@ -161,6 +163,8 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
                 //}
             
         }
+        print("grabbing that name though fam")
+        print(fbData.getName(uid: currentGuy))
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
