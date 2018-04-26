@@ -60,9 +60,10 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
         
         //tableview
         tableView.backgroundColor = UIColor.clear
+        addGradient()
+      
 //        tableView.layer.cornerRadius = 10
 //        tableView.layer.masksToBounds = true
-        
 
         // Do any additional setup after loading the view.
     }
@@ -161,7 +162,28 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
 
 
    
-  
+    func AddGradientMask()
+    {
+        let gradientMask = CAGradientLayer()
+        
+        gradientMask.frame = tableView.superview?.bounds ?? CGRect.null
+        gradientMask.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
+        gradientMask.locations = [0.8, 1.0]
+        
+        
+         tableView.superview?.layer.mask = gradientMask
+    }
+    
+    func addGradient() {
+        let gradient = CAGradientLayer()
+        
+        gradient.frame = tableView.superview?.bounds ?? CGRect.null
+        gradient.colors = [UIColor.clear.cgColor, UIColor.clear.cgColor, UIColor.black.cgColor, UIColor.black.cgColor, UIColor.clear.cgColor, UIColor.clear.cgColor
+        ]
+        gradient.locations = [0.0, 0.0, 0.05, 0.75, 0.85, 1.0]
+        tableView.superview?.layer.mask = gradient
+        
+    }
 
     /*
     // MARK: - Navigation
