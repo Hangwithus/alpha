@@ -20,11 +20,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //adds firebase
         FirebaseApp.configure()
         //loads ViewController.swift as main view
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
+//        window = UIWindow(frame: UIScreen.main.bounds)
+//        window?.makeKeyAndVisible()
+//
+//        window?.rootViewController = UINavigationController(rootViewController: FriendsController())
+//        window?.tintColor = UIColor(red:0.10, green:0.87, blue:0.19, alpha:1.00)
+//
+        UIApplication.shared.statusBarStyle = .lightContent
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//        let exampleViewController: FriendsUIViewController = mainStoryboard.instantiateViewController(withIdentifier: "FriendsUI") as! FriendsUIViewController
+         let exampleViewController: MapViewController = mainStoryboard.instantiateViewController(withIdentifier: "mapView") as! MapViewController
+        self.window?.rootViewController = exampleViewController
         
-        window?.rootViewController = UINavigationController(rootViewController: FriendsController())
-        
+        self.window?.makeKeyAndVisible()
+                UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Nunito-SemiBold", size: 17)!], for: UIControlState.normal)
+
         return true
     }
 
@@ -49,6 +60,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
+        
+        guard let currentGuy = Auth.auth().currentUser?.uid else{
+            return
+        }
+        let ref = Database.database().reference(fromURL: "https://hang-8b734.firebaseio.com/")
+        let usersReference = ref.child("users").child(currentGuy)
+        let values = ["available":"false", "status":"unavailable"]
+
+        usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+            
+            if err != nil {
+                print(err!)
+                return
+            }
+            
+            print("updated that thing")
+            
+        })
         self.saveContext()
     }
 
