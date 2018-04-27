@@ -73,7 +73,6 @@ FriendsController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
         fetchUser()
     }
     
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         pickerView.frame = CGRect(x: 0 - 150 , y: view.frame.height-120, width: view.frame.width + 300, height: 120)
@@ -119,6 +118,7 @@ FriendsController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
                     print(self.unavailableUsers)
                   
                     DispatchQueue.main.async { self.tableView.reloadData()
+                    }
                 }
             }
         }

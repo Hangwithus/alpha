@@ -38,7 +38,7 @@ extension UILabel {
     }
 }
 
-class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
   
     
     @IBOutlet weak var tableView: UITableView!
@@ -46,9 +46,28 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
     var friendsUnavailable : Array<Dictionary<String,String>> = placeholderFriendsUavailable
 
     let sections = ["AVAILABLE", "UNAVAILABLE"]
+    
+    @IBOutlet weak var statusPicker: UIPickerView!
+    
+    @IBOutlet weak var statusRing: UIImageView!
+    
+    //Fonts
+    let semiBoldLabel = UIFont(name: "Nunito-SemiBold", size: UIFont.labelFontSize)
+    let semiBoldLabelSmall = UIFont(name: "Nunito-SemiBold", size: UIFont.smallSystemFontSize)
+    let boldLabel = UIFont(name: "Nunito-Bold", size: UIFont.labelFontSize)
+    let largeLabel = UIFont(name: "Nunito-Bold", size: 30)
+    
+    //Picker variables
+    var pickerRowVariable = 0
+    let pickerView = UIPickerView()
+    var rotationAngle: CGFloat!
+    let width:CGFloat = 300
+    let height:CGFloat = 300
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //Table View
         tableView.reloadData()
         tableView.delegate = self
         tableView.dataSource = self
@@ -58,19 +77,96 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
         self.tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.bounds.size.width, height: dummyViewHeight))
         self.tableView.contentInset = UIEdgeInsetsMake(-dummyViewHeight, 0, 0, 0)
         
+        //Status Picker
+        statusPicker.delegate  = self
+        statusPicker.dataSource = self
+        
+        //Status picker rotation
+        rotationAngle = -90 * (.pi/180)
+        statusPicker.transform = CGAffineTransform(rotationAngle: rotationAngle)
+        
         //tableview
         tableView.backgroundColor = UIColor.clear
-//        tableView.layer.cornerRadius = 10
-//        tableView.layer.masksToBounds = true
+    }
+
+    //picker code
+    
+    func numberOfComponents(in statusPicker: UIPickerView) -> Int {
         
-
-        // Do any additional setup after loading the view.
+        statusPicker.subviews.forEach({
+            $0.isHidden = $0.frame.height < 1.0
+        })
+        
+        //Limit columns in picker view to 1
+        return 1
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func pickerView(_ statusPicker: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        
+        //Return how many rows needed from data
+        return status.count
     }
+    
+    func pickerView(_ statusPicker: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 100
+    }
+    
+    func pickerView(_ statusPicker: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return 100
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        
+        //Check whether user is unavailable or available
+        if row == 0 {
+            //Show the selector ring image if unavailable
+            statusRing.isHighlighted = false
+        } else {
+            //Show the selector ring image if unavailable
+            statusRing.isHighlighted = true
+        }
+    }
+    
+    //Create Custom UI View for picker
+    func pickerView(_ statusPicker: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        let view = UIView()
+        view.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        
+        let availabilityEmoji = UILabel()
+        
+        availabilityEmoji.frame = CGRect(x: 0, y: 0, width: width, height: 250)
+        availabilityEmoji.textAlignment = .center
+        
+        if #available(iOS 11.0, *) {
+            availabilityEmoji.font = UIFontMetrics.default.scaledFont(for: largeLabel!)
+        } else {
+            // Fallback on earlier versions
+        }
+        availabilityEmoji.text = status[row]
+        
+        let availabilityTitle = UILabel()
+        availabilityTitle.textColor = UIColor.white
+        availabilityTitle.frame = CGRect(x:0, y:20, width: width, height:height)
+        availabilityTitle.textAlignment = .center
+        //availabilityTitle.translatesAutoresizingMaskIntoConstraints = false
+        //availabilityTitle.bottomAnchor.constraint(equalTo: UIView.topAnchor).isActive = true
+        if #available(iOS 11.0, *) {
+            availabilityTitle.font = UIFontMetrics.default.scaledFont(for: boldLabel!)
+        } else {
+            // Fallback on earlier versions
+        }
+        availabilityTitle.text = statusText[row]
+        
+        view.addSubview(availabilityTitle)
+        view.addSubview(availabilityEmoji)
+        
+        //View rotation
+        view.transform = CGAffineTransform(rotationAngle: 90 * (.pi/180))
+        
+        return view
+    }
+    
+   //Table view code
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
@@ -84,9 +180,11 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 58
     }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: "headerCell") as! HeaderTableViewCell
         cell.title.text = self.sections[section]
@@ -95,7 +193,6 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
         return cell
     }
     
-   
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let userAvailable = friends[indexPath.row]
         let userUnavailable = friendsUnavailable[indexPath.row]
@@ -113,15 +210,6 @@ class FriendsUIViewController: UIViewController, UITableViewDelegate, UITableVie
             return cell
         }
     }
-     
-            
-//        cell.layer.cornerRadius=10 //set corner radius here
-//        cell.layer.borderWidth = 2 // set border width here
-
-
-    
-    
-    
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath)
     {
