@@ -264,19 +264,19 @@ FriendsController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
         pickerRowVariable = row
         // use the row to get the selected row from the picker view
         // using the row extract the value from your datasource (array[row])
-        guard let currentGuy = Auth.auth().currentUser?.uid else{
+        guard let currentGuy = Auth.auth().currentUser?.uid else{ //grab the current user uid from the data base/app
             return
         }
-        let ref = Database.database().reference(fromURL: "https://hang-8b734.firebaseio.com/")
-        let usersReference = ref.child("users").child(currentGuy)
-        var values = ["available":"", "status":""]
-        if(row == 0){
+        let ref = Database.database().reference(fromURL: "https://hang-8b734.firebaseio.com/") //reference the data base
+        let usersReference = ref.child("users").child(currentGuy) //find that user in the data base
+        var values = ["available":"", "status":""] //establish a var to change then push the the database
+        if(row == 0){ //if the picker is set to unavailable
             values = ["available":"false", "status":"unavailable"]
-        }else{
+        }else{ //if the picker is set to an actual status, make the user available and set their status
             values = ["available":"true", "status":status[row]]
         }
        
-        usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+        usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in //update firebase but check for errors
             
             if err != nil {
                 print(err!)
