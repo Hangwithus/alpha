@@ -2,7 +2,7 @@
 //  MapViewController.swift
 //  hang
 //
-//  Created by Joe Kennedy on 4/24/18.
+//   by Joe Kennedy on 4/24/18.
 //  Copyright © 2018 Joe Kennedy. All rights reserved.
 //
 
