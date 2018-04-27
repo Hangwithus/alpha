@@ -27,6 +27,8 @@ class FirebaseData: NSObject{
     
     
     
+    
+    
     func performQuery(uid: String, data: String) -> String{
         let rootRef = Database.database().reference()
         print("that uid")
@@ -37,7 +39,7 @@ class FirebaseData: NSObject{
             let value = snapshot.value as? NSDictionary
             print("printing value")
             print(value)
-            returnData = value?["name"] as? String ?? returnData
+            return returnData = value?[data] as? String ?? returnData
         }
         return returnData
     }
@@ -52,7 +54,7 @@ class FirebaseData: NSObject{
             let value = snapshot.value as? NSDictionary
             print("printing value")
             print(value)
-            returnData = value?["name"] as? [String] ?? returnData
+            returnData = value?[data] as? [String] ?? returnData
         }
         return returnData
     }
