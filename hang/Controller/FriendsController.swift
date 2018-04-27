@@ -18,7 +18,7 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
     var availableUsers = [Users]()
     var unavailableUsers = [Users]()
     let status = ["not","💩", "🌲", "❤️"]
-    let statusText = ["available","shit", "tree", "heart"]
+    let statusText = ["available","poop", "tree", "heart"]
     let pickerView = UIPickerView()
     var rotationAngle: CGFloat!
     let width:CGFloat = 300
@@ -61,54 +61,55 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
         let rootRef = Database.database().reference()
         let query = rootRef.child("users").child(currentGuy)
         
+        //the code below is an abomination that kind of works but not really.
+        //Please forgive me for my transgressions
         
-        
-        query.observe(.value) { (snapshot) in
+        query.observe(.value) { (snapshot) in //query the current user and observe that data bro
             //for child in snapshot.children.allObjects as! [DataSnapshot] {
                // print("got here 0")
                 //if let value = child.value as? NSDictionary {
                     //let value = (child.value as? NSDictionary
-                    let value = snapshot.value as? NSDictionary
+                    let value = snapshot.value as? NSDictionary //make it a readabe version of the query
                     //print(child)
                     //print(value)
                    // print("got here 1")
-                    let numFriends = value?["numFriends"] as? Int ?? 0
-                    let friendCode = value?["friendCode"] as? String ?? ""
+                    let numFriends = value?["numFriends"] as? Int ?? 0 //grab the number of friends they have
+                    let friendCode = value?["friendCode"] as? String ?? "" //grab their friend code
                     //print(numFriends)
                    // print(friendCode)
-                    let friendsList = value?["friendsList"] as? [String] ?? [String]();
+                    let friendsList = value?["friendsList"] as? [String] ?? [String](); //grab their friends list
                    // print(friendsList[0])
-                    let friendQuery = rootRef.child("users")
-            friendQuery.observe(.value){(snapshot) in
-                for child in snapshot.children.allObjects as! [DataSnapshot]{
+                    let friendQuery = rootRef.child("users") //reference all users
+            friendQuery.observe(.value){(snapshot) in //observe all users
+                for child in snapshot.children.allObjects as! [DataSnapshot]{ //for each user parse through them
                     //print("in here")
-                    if let value2 = child.value as? NSDictionary{
+                    if let value2 = child.value as? NSDictionary{ //set the value to a readable format
                         //print(value2)
                         //print(value2["available"])
-                        let key = child.key
+                        let key = child.key //get this users uid
                         var x: Int = 0
-                        while x<=numFriends{
-                            if(key == friendsList[x]){
+                        while x<=numFriends{ //cycle through their friends list
+                            if(key == friendsList[x]){ //if they are the current users friend
                             
                                 let user = Users()
                                 //let key = child.key
-                                let availability = value2["available"] as? String ?? "availability not found"
-                                let name = value2["name"] as? String ?? "Name not found"
-                                let email = value2["email"] as? String ?? "Email not found"
-                                let status = value2["status"] as? String ?? "Status not found"
+                                let availability = value2["available"] as? String ?? "availability not found" //get their availability
+                                let name = value2["name"] as? String ?? "Name not found" //their name
+                                let email = value2["email"] as? String ?? "Email not found" //their email (dont need this)
+                                let status = value2["status"] as? String ?? "Status not found" //their status
                                 user.name = name
                                 user.email = email
                                 user.availability = availability
                                 user.status = status
-                                self.users.append(user)
-                                DispatchQueue.main.async { self.tableView.reloadData() }
+                                self.users.append(user) //add this person to the users we want to show
+                                DispatchQueue.main.async { self.tableView.reloadData() } //reload the table view
                                 // print(user.name, user.availability)
                             
-                                if(user.availability == "true"){
+                                if(user.availability == "true"){ //if they are available put them in the available user list
                                     //self.availableUsers.append(key)
                                     self.availableUsers.append(user)
                                     //print("got that");
-                                }else{
+                                }else{ //if not put them in the unavailable user list
                                     //self.unavailableUsers.append(key)
                                     self.unavailableUsers.append(user)
                                 }
@@ -118,6 +119,7 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
                     }
                 }
             }
+                        //I kind of forget why this is here.........
                         var x: Int = 0
                         while x <= numFriends{
                          //   print("got here 3")

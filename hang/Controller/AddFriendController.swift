@@ -11,6 +11,8 @@ import Firebase
 
 class AddFriendController: UIViewController,UITextFieldDelegate {
 
+    //this is the screen for adding in new friends to your friends list
+    
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "logolarge")
@@ -135,34 +137,37 @@ class AddFriendController: UIViewController,UITextFieldDelegate {
         
         //need to add way to make sure that friend isn't already added
         
+        
+        //if the button has been pressed to add a new friends, reference the database and grab the users ordered by friends lsit
         let rootRef = Database.database().reference()
         let query = rootRef.child("users").queryOrdered(byChild: "friendCode")
         
         query.observe(.value) { (snapshot) in
-            for child in snapshot.children.allObjects as! [DataSnapshot] {
+            for child in snapshot.children.allObjects as! [DataSnapshot] { //parse through all of the users in the database
                 if let value = child.value as? NSDictionary {
-                    var loopcount = 0
+                    var loopcount = 0 //because I'm an idiot, this code loops endlessly so why not see how many times it looped?
                     let user = Users()
-                    let key = child.key
-                    var friendNumFriends = Int(value["numFriends"] as? String ?? "0")!
-                    let userfriendCode = value["friendCode"] as? String ?? "N/A"
-                    let name = value["name"] as? String ?? "N/A"
+                    let key = child.key //grab this persons uid
+                    var friendNumFriends = Int(value["numFriends"] as? String ?? "0")! //grab how many friends they have
+                    let userfriendCode = value["friendCode"] as? String ?? "N/A" //grab their friends code
+                    let name = value["name"] as? String ?? "N/A" //grab their name
                    // print(userfriendCode)
                     //print(friendCode)
                     //print("HEY LOOK AT ME OH MY GOD I AM ONLY CALLED ONCE")
-                    if(userfriendCode == friendCode){
+                    if(userfriendCode == friendCode){ //if their friend code is the one we entered
                         print("found the guy")
-                        guard let currentGuy = Auth.auth().currentUser?.uid else{
+                        guard let currentGuy = Auth.auth().currentUser?.uid else{ //grab current users uid
                             return
                         }
-                        var myNumFriends = 0
-                        let currentQuery = rootRef.child("users").child(currentGuy)
-                        currentQuery.observe(.value){(snapshot) in
+                        var myNumFriends = 0 //remember how many friends I have
+                        let currentQuery = rootRef.child("users").child(currentGuy) //reference and grab our current user
+                        currentQuery.observe(.value){(snapshot) in //look through their entry to grab their number of friends
                             //for child in snapshot.children.allObjects as! [DataSnapshot]{
                                 let value2 = snapshot.value as? NSDictionary
                                 print(value2)
                                     print("got that value")
                                     myNumFriends = value2?["numFriends"] as? Int ?? 0
+                                    //remember how many friends they have and print it (for some reason this doesn't always work)
                                     print("my friends after grabbed")
                                     print(myNumFriends)
                                 
@@ -172,14 +177,17 @@ class AddFriendController: UIViewController,UITextFieldDelegate {
                         let ref = Database.database().reference(fromURL: "https://hang-8b734.firebaseio.com/")
                         let usersReference = ref.child("users").child(currentGuy).child("friendsList")
                         let newFriendsReference = ref.child("users").child(key).child("friendsList")
+                        //increase each persons number of friends by 1 (because now we are friends)
                         friendNumFriends = friendNumFriends + 1
                         myNumFriends = myNumFriends + 1
                         print("friends Num")
                         print(friendNumFriends)
                         print("myNumFriends")
                         print(myNumFriends)
+                        //convert those ints to strings to share with firebase
                         var sMyFriendsNum = "\(myNumFriends)"
                         var sFriendsFriendsNum = "\(friendNumFriends)"
+                        //create vars that we can push into firebase (their friend number plus each others uid)
                         let friendValues = [sFriendsFriendsNum:currentGuy]
                         let userValues = [sMyFriendsNum:key]
                         //if(row == 0){
@@ -192,11 +200,15 @@ class AddFriendController: UIViewController,UITextFieldDelegate {
                         //ref.child("users").child(key).child("friendsList").setValue([currentGuy: ""])
                         //ref.child("users").child(currentGuy).child("friendsList").setValue([key:""])
                         print("past this")
+                        //create and reference both person's location in the database
                         let userReference2 = ref.child("users").child(currentGuy)
                         let friendReference2 = ref.child("users").child(key)
+                        //also remember to update each persons number of friends
                         let unumvals = ["numFriends":sMyFriendsNum]
                         print(unumvals)
                         let fnumvals = ["numFriends":sFriendsFriendsNum]
+                        
+                        //run through and update each othe data points and check for errors
                         usersReference.updateChildValues(userValues, withCompletionBlock: { (err, ref) in
                             
                             if err != nil {
@@ -249,6 +261,9 @@ class AddFriendController: UIViewController,UITextFieldDelegate {
                         //let addFriendController = AddFriendController()
                         
                         //self.navigationController?.pushViewController(addFriendController, animated:true)
+                        
+                        //navigate away from this screen... but this just keeps looping anyway for some reason
+                        //its probably really easy to break the loop using the IBOutlet stuff when we fully switch over to storyboard
                         let friendsController = FriendsController()
                         loopcount = loopcount + 1
                         print(loopcount)
