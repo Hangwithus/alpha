@@ -24,7 +24,7 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
     let width:CGFloat = 300
     let height:CGFloat = 100
     
-    let fbData = FirebaseData()
+    //let fbData = FirebaseData()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -166,7 +166,8 @@ FriendsController: UITableViewController, UIPickerViewDataSource, UIPickerViewDe
             
         }
         print("grabbing that name though fam")
-        print(fbData.getName(uid: currentGuy))
+       
+        //print(getPost(postId: currentGuy, completion: " " ))
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

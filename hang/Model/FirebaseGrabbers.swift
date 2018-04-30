@@ -9,99 +9,107 @@
 import Foundation
 import UIKit
 import Firebase
+import ObjectMapper
+import RxSwift
+import RxCocoa
 
-class FirebaseData: NSObject{
-    
-    /*
- 
-        The code in this file isn't working because it is not async, but I still commented it anyway
-        For further updates
-     
-     */
-    
-    
-    //Establish vars for all the potential data we would be have for the app
-    var name: String = "name not found"
-    var UID: String = "uid not found"
-    var phoneNumber: String = "phone number not found"
-    var email: String = "email not found"
-    var friendsList: [String] = ["friends list not found"]
-    var friendsCode: String = "friends code not found"
-    var status: String = "status not found"
-    var timeHang: String = "time left not found"
-    var numberOfFriends: String = "number of friends not found"
-    var currentHang: [String] = ["current hang not found"]
-    var location: [String] = ["location not found"]
-    
-    //reference the firebase database
-    let fbRef = Database.database().reference(fromURL: "https://hang-8b734.firebaseio.com/")
-    
-    
-    
-    
-    //perform a query that returns a single string
-    //takes in the parameters of the uid in question and the string from the query we want to get
-    func performQuery(uid: String, data: String) -> String{
-        let rootRef = Database.database().reference() //reference the database
-        print("that uid")
-        print(uid) //print the uid to make sure we are fudging with the right user
-        let query = rootRef.child("users").child(uid) //query and grab the users stuff
-        var returnData = "instance not found" //let us know if the query failed
-        query.observe(.value) { (snapshot) in //observe and look through the query
-            let value = snapshot.value as? NSDictionary //make the data a readable dictionary
-            print("printing value") //print it so we can double check that its the right stuff
-            print(value)
-            return returnData = value?[data] as? String ?? returnData //return this query
+extension BaseMappable {
+    static var firebaseIdKey : String {
+        get {
+            return "https://hang-8b734.firebaseio.com/"
         }
-        return returnData
     }
-    
-    //perfor a query that returns a string array (friends list, location), see the commented code above
-    func performQuery(uid: String, data: String) -> [String]{
-        let rootRef = Database.database().reference()
-        print("that uid")
-        print(uid)
-        let query = rootRef.child("users").child(uid)
-        var returnData = ["instance not found"]
-        query.observe(.value) { (snapshot) in
-            let value = snapshot.value as? NSDictionary
-            print("printing value")
-            print(value)
-            returnData = value?[data] as? [String] ?? returnData
+    init?(snapshot: DataSnapshot) {
+        guard var json = snapshot.value as? [String: Any] else {
+            return nil
         }
-        return returnData
+        json[Self.firebaseIdKey] = snapshot.key as Any
+        
+        self.init(JSON: json)
+    }
+}
+
+extension DatabaseQuery {
+    
+    func rx_observeSingleEvent(of event: DataEventType) -> Observable<DataSnapshot> {
+        return Observable.create({ (observer) -> Disposable in
+            self.observeSingleEvent(of: event, with: { (snapshot) in
+                observer.onNext(snapshot)
+                observer.onCompleted()
+            }, withCancel: { (error) in
+                observer.onError(error)
+            })
+            return Disposables.create()
+        })
     }
     
-    /*
- 
-     The below functions all work the same way, the just perform a query for a specifc data piece
- 
-     */
-    func getLocation(uid: String) -> [String]{
-        return performQuery(uid: uid, data: "location")
+    func rx_observeEvent(event: DataEventType) -> Observable<DataSnapshot> {
+        return Observable.create({ (observer) -> Disposable in
+            let handle = self.observe(event, with: { (snapshot) in
+                observer.onNext(snapshot)
+            }, withCancel: { (error) in
+                observer.onError(error)
+            })
+            return Disposables.create {
+                self.removeObserver(withHandle: handle)
+            }
+        })
     }
+    func getPosts() -> Observable<[Post]> {
+        let postRef = Database.database().reference()
+            .child("posts")
+        return postRef.rx_observeSingleEvent(of: .value)
+            .map { Mapper<Post>().mapArray(snapshot: $0) }
+    }
+   /* getPosts().subscribe(onNext: { posts in
+    //show the data or do whatever you want
+    }, onError: { error in
+    //show an alert
+    }).disposed(by: disposeBag)*/
+}
+
+
+extension Mapper {
+    func mapArray(snapshot: DataSnapshot) -> [N] {
+        return snapshot.children.map { (child) -> N? in
+            if let childSnap = child as? DataSnapshot {
+                return N(snapshot: childSnap)
+            }
+            return nil
+            //flatMap here is a trick
+            //to filter out `nil` values
+            }.flatMap { $0 }
+    }
+}
+
+func getPosts(completion: @escaping (([Post]) -> Void)) {
+    let postRef = Database.database().reference()
+        .child("posts")
+    postRef.observeSingleEvent(of: .value) { (snapshot) in
+        completion(Mapper<Post>().mapArray(snapshot: snapshot))
+    }
+}
+
+
+class Post: Mappable {
+    var name: String?
+    var friendCode: String?
+    //var content: String?
+    //var author: String?
     
-    func getNumFriends(uid: String) -> String{
-        return performQuery(uid: uid, data: "numFriends")
+    func mapping(map: Map) {
+        name <- map["name"]
+        friendCode <- map["friendCode"]
+        //content <- map["content"]
+        //author <- map["author"]
     }
-    
-    func getFriendsCode(uid: String) -> String{
-        return performQuery(uid: uid, data: "friendCode")
-    }
-    
-    func getFriendsList(uid: String) -> [String]{
-        return performQuery(uid: uid, data: "friendsList")
-    }
-    
-    func getEmail(uid: String) -> String{
-        return performQuery(uid: uid, data: "email")
-    }
-    
-    func getName(uid: String) -> String{
-        return performQuery(uid: uid, data: "name")
-    }
-    
-    func getStatus(uid: String) -> String{
-        return performQuery(uid: uid, data: "status")
-    }
+    required init?(map: Map) { }
+}
+
+func getPost(postId: String, completion:@escaping ((Post?) -> Void)) {
+    let postRef = Database.database()
+        .reference().child("posts").child("postId")
+    postRef.observeSingleEvent(of: .value, with: { (snapshot) in
+        completion(Post(snapshot: snapshot))
+    })
 }

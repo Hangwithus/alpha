@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ObjectMapper
 
 class Users: NSObject {
     
@@ -15,3 +16,4 @@ class Users: NSObject {
     var availability: String?
     var status: String?
 }
+

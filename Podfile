@@ -9,6 +9,9 @@ target 'hang' do
   pod 'Firebase/Database'
   pod 'Firebase/Auth'
   pod 'Firebase/Storage'
+  pod 'ObjectMapper', '~> 2.0.0'
+  pod 'RxSwift', '~> 4.0'
+  pod 'RxCocoa', '~> 4.0'
 
   target 'hangTests' do
     inherit! :search_paths
