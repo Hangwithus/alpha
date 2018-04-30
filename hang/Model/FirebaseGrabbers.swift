@@ -29,6 +29,26 @@ extension BaseMappable {
     }
 }
 
+class UserCellData: Mappable{
+    var name: String?
+    var status: String?
+    var longitude: Int?
+    var latitude: Int?
+    var timeLeft: String?
+    
+    required init?(map: Map){
+        
+    }
+    
+    func mapping(map: Map){
+        name <- map["name"]
+        status <- map["status"]
+        timeLeft <- map["duration"]
+        longitude <- map["location.longitude"]
+        latitude <- map["location.latitude"]
+    }
+}
+
 extension DatabaseQuery {
     
     func rx_observeSingleEvent(of event: DataEventType) -> Observable<DataSnapshot> {
